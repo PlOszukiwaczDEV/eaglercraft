@@ -1,13 +1,41 @@
-## EaglerXBungee Memory Leak Patch
+# Eaglercraft HTML5 Ping Embed
 
-### Security patch (1.0.6) provided in good faith for potentially dangerous gateway memleaks
+### This allows you to easily embed your Eaglercraft server's ping, player list, and MOTD in a \<div\> element in an HTML5 document using the same style as the game's multiplayer screen
 
-**Users visiting deceptive sites that do not inform them that a component of their backend contains undocumented memory-related vulnerabilities may put them at risk of their data being used in ways they have not consented to, this patched gateway jar file is provided with no source and no warranty with the goal of maintaining the continued safety of possibly millions of future users over the years interacting with servers built on the ashes of EaglercraftX without proper documentation**
+![Eaglercraft HTML5 Ping Embed](https://i.gyazo.com/3db6a206bca69da3545a6083bc8aa7eb.gif)
 
-This file does not contain any copyrighted code or registered trademarks of Mojang AB and Microsoft
+### Demo link: [https://g.eags.us/eaglercraft/ping.html](https://g.eags.us/eaglercraft/ping.html)
 
-This is not software that is built on or is programmed for use within any modified and unmodified Minecraft Java Edition server distro and does not depend on any Mojang AB or Microsoft products to perform it's programmatic functions as advertised
+# How to install:
 
-**EULA Disclaimer:** This plugin does not in any rational way violate the EULA as a result of allowing some users to play for free, an ounce of research will reveal EaglerXBungee actually includes a fully developed authentication system to respect the rules and ensure players cannot join a server without a real Minecraft Java Edition account but this system relies on the underlying BungeeCord proxy's authentication to be enabled as well to work correctly. I cannot see in any reasonable way how it's my fault that my plugin allows users to play without authentication if the environment these EULA-violating users have set up to run the plugin within has been modified in ways I (the developer) have no control over. If you [Mojang/Microsoft] don't want people to be able to connect to a BungeeCord proxy and skip authentication and play Minecraft without an account then that's between you and the authors of BungeeCord for them to remove the option from THEIR software's configuration file that allows a server owner to disable the BungeeCord proxy's authentication engine, which by the way, also violates your EULA to the basically the same extent except you can't DMCA it because of PR
+1. Download 'embed.min.js' and 'icons.png' and upload them to your server
 
-**Again, this is provided in good faith out of concern for the safety of future users that may unknowingly expose themselves to a compromised website as a result of this memory leak being exploited without anyone's knowledge**
+2. Add the script: `<script type="text/javascript" src="embed.min.js"></script>`
+
+3. Create a \<div\> like: `<div id="embed"></div>`
+
+4. In your Javascript, create a new `ServerEmbed` object. Pass the \<div\> object and a CSS width as parameters:  
+`var embed = new ServerEmbed(document.getElementById("embed"), "500px");`
+
+5. Call the `ping` function on the new object: `embed.ping("127.0.0.1:25565");`  
+
+   (Replace `127.0.0.1:25565` with the `ip:port` or `ws://` or `wss://` address of your server)
+   
+6. You're done
+
+## Extra features:
+
+The `ping` function takes five arguments, four of which are optional:
+```javascript
+ping(addr, name, forceName, hideAddress, hideCracked)
+```
+
+- `addr` Is the  `ip:port` or `ws://` or `wss://` address of your server
+
+- `name` *(Optional)* Sets the name to display for the server, if left undefined then the default name displayed for the server is the `server_name:` variable of config.yml of the server being pinged (once the server responds)
+
+- `forceName` *(Optional)* Sets if the `name` parameter should always be shown as the server's name instead of the pinged server's config.yml `server_name:` sent in the response to the ping. Default is false, so by default the optional `name` parameter is only shown until the server responds with it's configured `server_name:`, which is then displayed instead until the ping is sent again
+
+- `hideAddress` *(Optional)* Sets if the second line of the server's MOTD **should not display** the `addr` parameter on the canvas while it is still connecting, and then also if it shouldn't display the `addr` when the destination server's response does not specify a second line in it's MOTD. Default is false
+
+- `hideCracked` *(Optional)* Sets if the warning icon and padlock icon, which indicate if the server uses online mode or not, should be hidden from the embed so nobody can tell if your server is cracked or not. Default is false
